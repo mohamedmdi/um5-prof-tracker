@@ -21,10 +21,10 @@ export default async function Home() {
       <div className="relative z-[-1] flex place-items-center">
         <ul>
           {data.map((item, index) => (
-            <>
-              <li key={index}>{item.name}</li>
-              <li key={index}>{item.year}</li>
-            </>
+            <div key= {index}>
+              <li >{item.name}</li>
+              <li >{item.year}</li>
+            </div>
           ))}
         </ul>
       </div>
