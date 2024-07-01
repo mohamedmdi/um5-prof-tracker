@@ -2,31 +2,42 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { db } from "../lib/firebase";
 import { collection, getDocs } from "firebase/firestore";
+import Image from "next/image";
+import { Input } from "@/components/ui/input"
+
 
 export default async function Home() {
   const querySnapshot = await getDocs(collection(db, "profslist"));
   const data = querySnapshot.docs.map((doc) => doc.data());
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <div className="z-10 w-full max-w-5xl items-center justify-evenly font-mono text-sm lg:flex">
-        <p className="fixed left-0 top-0 flex w-full justify-center border-b border-gray-300 bg-gradient-to-b from-zinc-200 pb-6 pt-8 backdrop-blur-2xl dark:border-neutral-800 dark:bg-zinc-800/30 dark:from-inherit lg:static lg:w-auto  lg:rounded-xl lg:border lg:bg-gray-200 lg:p-4 lg:dark:bg-zinc-800/30">
-          Go to &nbsp;
-          <Link href="/test">Test</Link>
-        </p>
-        <Link href="/test">
-          <Button>Create Account</Button>
-        </Link>
-      </div>
-      <div className="relative z-[-1] flex place-items-center">
+    <main>
+      <div
+        className={`flex min-h-screen flex-col items-center justify-between p-24`}
+      >
+        <div className="flex flex-col z-10 w-full max-w-5xl items-center justify-evenly font-mono text-sm">
+          <div className="flex flex-col items-center justify-center gap-8">
+            <Image src="/unnamed.gif" alt="Logo" width={144} height={144} />
+            <div className="font-inter text-center flex flex-col gap-2">
+              <h2 className="text-3xl font-bold">Gestion Profs</h2>
+              <span className="text-xl">Connectez-vous à votre compte</span>
+            </div>
+          </div>
+          <div className="flex flex-col items-center justify-center gap-8" >
+            <input type="email" placeholder="Email" />
+            <input className="border"/>
+          </div>
+        </div>
+        {/* <div className="relative z-[-1] flex place-items-center">
         <ul>
           {data.map((item, index) => (
             <div key= {index}>
               <li >{item.name}</li>
               <li >{item.year}</li>
-            </div>
-          ))}
-        </ul>
+              </div>
+              ))}
+              </ul>
+            </div> */}
       </div>
     </main>
   );

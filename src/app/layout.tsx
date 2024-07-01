@@ -1,13 +1,13 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import {Inter} from "next/font/google";
 import "./globals.css";
-import { redirect } from "next/navigation";
 import NextTopLoader from "nextjs-toploader";
-import { cookies } from 'next/headers';
-import { SESSION_COOKIE_NAME } from '@/lib/constants';
 
-
-const inter = Inter({ subsets: ["latin"] });
+const inter = Inter({
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-inter',
+})
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -19,10 +19,9 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const session = cookies().get(SESSION_COOKIE_NAME)?.value || null;
   return (
-    <html lang="en">
-      <body className={inter.className}>
+    <html lang="en" className={`${inter.variable}`}>
+      <body>
         <NextTopLoader />
         {children}
       </body>
