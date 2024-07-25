@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 
 import { onAuthStateChanged } from '@/lib/auth';
 
-export function useUserSession(InitSession: string | null) {
+export function useAuth(InitSession: string | null) {
   const [userUid, setUserUid] = useState<string | null>(InitSession);
 
   // Listen for changes to the user session

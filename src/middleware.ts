@@ -1,5 +1,10 @@
 import { type NextRequest, NextResponse } from "next/server";
-import { HOME_ROUTE, ROOT_ROUTE, SESSION_COOKIE_NAME } from "@/lib/constants";
+import {
+  HOME_ROUTE,
+  ROOT_ROUTE,
+  SESSION_COOKIE_NAME,
+  UID_COOKIE_NAME,
+} from "@/lib/constants";
 import axios from "axios";
 
 const protectedRoutes = [HOME_ROUTE];
@@ -18,22 +23,22 @@ const verifyToken = async (token: string) => {
 };
 
 export default async function middleware(request: NextRequest) {
-  // const session = request.cookies.get(SESSION_COOKIE_NAME)?.value || "";
-  // const isVerified = await verifyToken(session);
-
-  // if (request.nextUrl.pathname === "/") {
-  //   if (session && isVerified == 200)
-  //     return NextResponse.redirect(new URL(HOME_ROUTE, request.url));
-  //   return NextResponse.next();
-  // }
-
-  // if (protectedRoutes.includes(request.nextUrl.pathname)) {
-  //   if (!session || isVerified == 401 || isVerified == 500)
-  //     return NextResponse.redirect(new URL("/", request.url));
-  //   return NextResponse.next();
-  // }
-  return NextResponse.next();
+  const session = request.cookies.get(SESSION_COOKIE_NAME)?.value || "";
+  const isVerified = session ? await verifyToken(session) : null;
   
+
+  if (request.nextUrl.pathname === "/") {
+    if (session && isVerified == 200)
+      return NextResponse.redirect(new URL(HOME_ROUTE, request.url));
+    return NextResponse.next();
+  }
+
+  if (protectedRoutes.includes(request.nextUrl.pathname)) {
+    if (!session || isVerified == 401 || isVerified == 500)
+      return NextResponse.redirect(new URL("/", request.url));
+    return NextResponse.next();
+  }
+  return NextResponse.next();
 }
 
 export const config = {
