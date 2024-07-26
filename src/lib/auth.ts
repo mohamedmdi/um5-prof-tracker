@@ -42,7 +42,11 @@ export async function signIn({
   password: string;
 }): Promise<string> {
   try {
-    const userCredential = await signInWithEmailAndPassword(auth, email, password);
+    const userCredential = await signInWithEmailAndPassword(
+      auth,
+      email,
+      password
+    );
     // Signed up
     const idToken = await userCredential.user.getIdToken();
     await createSession({ idToken, userId: userCredential.user.uid });
@@ -59,29 +63,6 @@ export async function signIn({
     throw new Error("Un problème est survenu lors de la connexion.");
   }
 }
-
-// export async function signIn({
-//   email,
-//   password,
-// }: {
-//   email: string;
-//   password: string;
-// }) {
-//   signInWithEmailAndPassword(auth, email, password)
-//     .then(async (userCredential) => {
-//       // Signed up
-
-//       const idToken = await userCredential.user.getIdToken();
-//       createSession({ idToken, userId: userCredential.user.uid });
-//       return idToken;
-//     })
-//     .catch((error) => {
-//       const errorCode = error.code;
-//       const errorMessage = error.message;
-//       throw new Error(errorMessage);
-//     });
-// }
-
 export async function EmailsignOut() {
   signOut(auth)
     .then(() => {

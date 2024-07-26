@@ -9,7 +9,7 @@ import { getAuth } from "firebase-admin/auth";
 customInitApp();
 
 export async function createSession({idToken, userId} : {idToken: string, userId: string}) {
-  const expiresIn = 60 * 60 * 24 * 5 * 1000; // 5 days
+  const expiresIn = 60 * 60 * 24 * 14 * 1000; // 14 days
   try {
     const sessionCookie = await getAuth().createSessionCookie(idToken, {
       expiresIn,
