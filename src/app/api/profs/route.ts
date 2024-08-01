@@ -115,6 +115,10 @@ export async function GET(request: NextRequest) {
   }));
   return NextResponse.json({ profs: docs, length: docs.length, status: 200 });
 }
+
+
+
+
 export async function POST(request: NextRequest) {
   const data = await request.json();
   console.log(data);

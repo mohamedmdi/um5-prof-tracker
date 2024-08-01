@@ -1,4 +1,5 @@
-import Search from "@/components/ui/dashboard/search";
+
+import AddButton from "@/components/ui/dashboard/add";
 import React from "react";
 import { DataTable } from "../dashboardv/data-table";
 import { columns } from "../dashboardv/columns";
@@ -20,7 +21,7 @@ export default async function Dashboard() {
     .catch((error) => error);
   return (
     <main className="flex flex-col items-center justify-between p-16">
-      <Search />
+      <AddButton/>
       <div className="w-full">
         <div className="py-4">
           <DataTable columns={columns} data={data} />
