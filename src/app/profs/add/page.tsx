@@ -5,13 +5,8 @@ import React, { useState } from "react";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+
+import { differenceInDays, format } from "date-fns";
 
 import {
   Form,
@@ -25,47 +20,51 @@ import { Loader2 } from "lucide-react";
 
 export default function AddProf() {
   const [submitting, setSubmitting] = useState(false);
+  const [category, setCategory] = useState<String>("");
 
   const formSchema = z.object({
     nom: z.string(),
     prenom: z.string(),
-    cat: z.string().refine((value) => ["A", "B", "C", "D"].includes(value), {
-      message: "La Categorie doit être A, B, C ou D",
-    }),
-    daterec: z.string(),
+    daterec: z
+      .string({
+        required_error: "Veuillez entrer une date",
+      })
+      .min(1, {
+        message: "Veuillez entrer une date",
+      }),
     num: z
       .string()
       .regex(/^(06|07)/, { message: "Le numéro doit commencer par 06 ou 07" }),
   });
 
-  const form = useForm({
+  const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       nom: "",
       prenom: "",
-      cat: "",
       daterec: "",
       num: "07",
     },
     mode: "onChange",
   });
 
-  const formatDate = (dateString : string) => {
-    const date = new Date(dateString);
-    const day = String(date.getDate()).padStart(2, '0');
-    const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are 0-based
-    const year = date.getFullYear();
-    return `${day}-${month}-${year}`;
+  const calculateCategory = (date: string) => {
+    const diffDate = differenceInDays(new Date(), new Date(date));
+
+    if (diffDate < 1825) setCategory("A");
+    else if (diffDate >= 1826 && diffDate < 3650) setCategory("B");
+    else if (diffDate >= 3651 && diffDate < 5475) setCategory("C");
+    else setCategory("D");
   };
 
   function onSubmit(values: z.infer<typeof formSchema>) {
-    values = {
+    const newValues = {
       ...values,
-      daterec: formatDate(values.daterec)
+      daterec: format(values.daterec, "dd/MM/yyyy"),
     };
-    console.log(values);
+    console.log(newValues);
+    console.log(category);
   }
-
 
   return (
     <div className="flex flex-col">
@@ -103,34 +102,6 @@ export default function AddProf() {
             />
             <FormField
               control={form.control}
-              name="cat"
-              render={({ field }) => (
-                <FormItem className="w-full">
-                  <FormLabel>Categorie</FormLabel>
-                  <FormControl>
-                    <Select
-                      onValueChange={field.onChange}
-                      defaultValue={field.value}
-                    >
-                      <FormControl>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Selectionez une categorie" />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        <SelectItem value="A">A</SelectItem>
-                        <SelectItem value="B">B</SelectItem>
-                        <SelectItem value="C">C</SelectItem>
-                        <SelectItem value="D">D</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </FormControl>
-                  <FormMessage className="max-w-full" />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
               name="daterec"
               render={({ field }) => (
                 <FormItem className="w-full">
@@ -138,10 +109,22 @@ export default function AddProf() {
                   <FormControl>
                     <Input
                       type="date"
-                      placeholder="Selectionez une date"
-                      value={field.value}
-                      onChange={(e) => field.onChange(formatDate(e.target.value))}
+                      placeholder="JJ/MM/AAAA"
                       className="w-full"
+                      onChange={(e) => {
+                        const inputDate = new Date(e.target.value);
+                        const minDate = new Date("1900-01-01");
+                        const maxDate = new Date();
+                        if (e.target.value && inputDate >= minDate && inputDate <= maxDate) {
+                          calculateCategory(
+                            format(e.target.value, "dd/MM/yyyy")
+                          );
+                          field.onChange(e.target.value);
+                        }else {
+                          field.onChange("");
+                          setCategory("");
+                        }
+                      }}
                     />
                   </FormControl>
                   <FormMessage className="max-w-full" />
