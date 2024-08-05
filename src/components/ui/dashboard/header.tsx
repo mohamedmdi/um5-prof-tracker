@@ -6,8 +6,8 @@ import { EmailsignOut } from "@/lib/auth";
 
 const Header = () => {
   return (
-    <div className="w-full bg-gray-50">
-      <header className="container mx-auto h-20 flex justify-between items-center border-b-4 border-sky-700">
+    <div className="w-full bg-gray-50 border-b-4 border-sky-700">
+      <header className="container mx-auto h-20 flex justify-between items-center ">
         <Image src={"/unnamed.gif"} alt="Logo" width={80} height={80} />
 
         <ul className="flex flex-row space-x-4 font-semibold text-sky-700">
