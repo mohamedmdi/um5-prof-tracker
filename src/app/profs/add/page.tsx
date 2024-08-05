@@ -19,14 +19,19 @@ import {
 } from "@/components/ui/form";
 import { CirclePlus, Loader2 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import axios from "axios";
 
 export default function AddProf() {
   const [submitting, setSubmitting] = useState(false);
   const [category, setCategory] = useState<String>("");
 
   const formSchema = z.object({
-    nom: z.string(),
-    prenom: z.string(),
+    nom: z.string().min(1, {
+      message: "Veuillez entrer un nom valide",
+    }),
+    prenom: z.string().min(1, {
+      message: "Veuillez entrer un prénom valide",
+    }),
     daterec: z
       .string({
         required_error: "Veuillez entrer une date valide",
@@ -60,18 +65,30 @@ export default function AddProf() {
     else setCategory("D");
   };
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    setSubmitting(true);
     const newValues = {
       ...values,
       daterec: format(values.daterec, "dd/MM/yyyy"),
+      cat: category,
     };
+    try {
+      const response = await axios.post("http://localhost:3000/api/profs", {
+        newValues,
+      });
+      console.log("Add => : response.data : ", response.data);
+      return response.data;
+    } catch (error) {
+      if (axios.isAxiosError(error)) return error.response?.status || 500;
+    }
     console.log(newValues);
-    console.log(category);
   }
 
   return (
     <main className="flex w-full flex-col items-center justify-center">
-      <h2 className="text-2xl font-bold uppercase mt-24">Ajouter Prof</h2>
+      <div className="flex flex-col w-auto md:w-1/2 mt-24">
+        <h2 className="text-2xl font-bold uppercase">Ajouter Prof</h2>
+      </div>
       <div className="flex flex-col w-auto md:w-1/2 m-5 p-6 border-2 rounded-lg items-center justify-center mt-5">
         <Form {...form}>
           <form
@@ -148,7 +165,6 @@ export default function AddProf() {
                   </FormItem>
                 )}
               />
-              <div className="">
                 <FormField
                   control={form.control}
                   name="num"
@@ -165,7 +181,6 @@ export default function AddProf() {
                     </FormItem>
                   )}
                 />
-              </div>
             </div>
             <div className="">
               <FormItem className="w-full">
