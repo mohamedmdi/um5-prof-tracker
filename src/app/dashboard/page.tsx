@@ -1,8 +1,8 @@
 
 import AddButton from "@/components/ui/dashboard/add";
 import React from "react";
-import { DataTable } from "../dashboardv/data-table";
-import { columns } from "../dashboardv/columns";
+import { DataTable } from "../dashboard/data-table";
+import { columns } from "../dashboard/columns";
 import axios from "axios";
 
 async function getProfs() {

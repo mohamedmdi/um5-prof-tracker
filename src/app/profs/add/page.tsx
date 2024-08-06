@@ -19,31 +19,13 @@ import {
 } from "@/components/ui/form";
 import { CirclePlus, Loader2 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
-import axios from "axios";
+import { setProfs } from "@/actions/profs-actions";
+import { formSchema } from "@/lib/utils";
 
 export default function AddProf() {
   const [submitting, setSubmitting] = useState(false);
   const [category, setCategory] = useState<String>("");
-
-  const formSchema = z.object({
-    nom: z.string().min(1, {
-      message: "Veuillez entrer un nom valide",
-    }),
-    prenom: z.string().min(1, {
-      message: "Veuillez entrer un prénom valide",
-    }),
-    daterec: z
-      .string({
-        required_error: "Veuillez entrer une date valide",
-      })
-      .min(1, {
-        message: "Veuillez entrer une date valide",
-      }),
-    num: z
-      .string()
-      .max(10, { message: "Le numéro doit contenir 10 chiffres" })
-      .regex(/^(06|07)/, { message: "Le numéro doit commencer par 06 ou 07" }),
-  });
+  const [error, setError] = useState<String>("");
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -55,7 +37,6 @@ export default function AddProf() {
     },
     mode: "onChange",
   });
-
   const calculateCategory = (date: string) => {
     const diffDate = differenceInDays(new Date(), new Date(date));
 
@@ -72,16 +53,16 @@ export default function AddProf() {
       daterec: format(values.daterec, "dd/MM/yyyy"),
       cat: category,
     };
-    try {
-      const response = await axios.post("http://localhost:3000/api/profs", {
-        newValues,
+    await setProfs(newValues)
+      .then((data) => {
+        console.log("Add => : data : ", data);
+        setSubmitting(false);
+      })
+      .catch((error) => {
+        console.log("Add => : error : ", error);
+        setSubmitting(false);
       });
-      console.log("Add => : response.data : ", response.data);
-      return response.data;
-    } catch (error) {
-      if (axios.isAxiosError(error)) return error.response?.status || 500;
-    }
-    console.log(newValues);
+    // console.log(newValues);
   }
 
   return (
@@ -165,22 +146,39 @@ export default function AddProf() {
                   </FormItem>
                 )}
               />
-                <FormField
-                  control={form.control}
-                  name="num"
-                  render={({ field }) => (
-                    <FormItem className="w-full ">
-                      <FormLabel>Numero de telephone</FormLabel>
-                      <FormControl>
-                        <Input
-                          {...field}
-                          className="w-full border-2 border-slate-300"
-                        />
-                      </FormControl>
-                      <FormMessage className="max-w-full" />
-                    </FormItem>
-                  )}
-                />
+              <FormField
+                control={form.control}
+                name="num"
+                render={({ field }) => (
+                  <FormItem className="w-full ">
+                    <FormLabel>Numero de telephone</FormLabel>
+                    <FormControl>
+                      <Input
+                        onChange={(e) => {
+                          const input = e.target.value;
+                          const regex = /^(07|06|05)[0-9]{8}$/;
+                          if (regex.test(input)) {
+                            field.onChange(input);
+                            setError("");
+                          } else {
+                            setError("Numero n'est pas obligatoire mais, veuillez entrer un Numero valide");
+                            field.onChange("");
+                          }
+                        }}
+                        className="w-full border-2 border-slate-300"
+                      />
+                    </FormControl>
+                    <FormMessage className="max-w-full" />
+                    {error && (
+                      <div className="mt-1">
+                        <span className="text-slate-900 text-sm max-w-full">
+                          {error}
+                        </span>
+                      </div>
+                    )}
+                  </FormItem>
+                )}
+              />
             </div>
             <div className="">
               <FormItem className="w-full">

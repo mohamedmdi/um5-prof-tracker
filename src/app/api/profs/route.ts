@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/firebase";
-import { collection, getDocs } from "firebase/firestore";
+import { addDoc, collection, getDocs } from "firebase/firestore";
 
 export async function GET(request: NextRequest) {
   // const data = [
@@ -116,11 +116,20 @@ export async function GET(request: NextRequest) {
   return NextResponse.json({ profs: docs, length: docs.length, status: 200 });
 }
 
-
-
-
 export async function POST(request: NextRequest) {
-  const data = await request.json();
-  console.log("api/profs => data:", data);
-  return NextResponse.json({ data });
+  const newProf = await request.json();
+  try {
+    const docRef = await addDoc(collection(db, "profslist"), newProf);
+    console.log("Document written with ID: ", docRef.id);
+    return NextResponse.json({
+      message: "Document written",
+      status: 200,
+    });
+  } catch (error) {
+    console.log(error);
+    return NextResponse.json({
+      error: error,
+      status: 500,
+    });
+  }
 }
