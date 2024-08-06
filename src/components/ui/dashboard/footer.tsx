@@ -1,12 +1,15 @@
-const Footer = () => {
+import { cn } from "@/lib/utils";
 
-return (
-    <footer className="w-full py-2 bg-sky-700">
-        <div className="container mx-auto" >
-          <p className="text-center text-sm font-semibold text-white">FSJES-SOUISSI</p>
-        </div>
-      </footer>
-)
-}
+const Footer = ({ className }: React.HTMLAttributes<HTMLDivElement>) => {
+  return (
+    <footer className={cn("w-full py-2 bg-sky-700", className)}>
+      <div className="container mx-auto">
+        <p className="text-center text-sm font-semibold text-white">
+          FSJES-SOUISSI
+        </p>
+      </div>
+    </footer>
+  );
+};
 
 export default Footer;

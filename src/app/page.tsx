@@ -22,7 +22,6 @@ import { useAuth } from "@/hooks/useAuth";
 import { useCookies } from "next-client-cookies";
 import { Loader2 } from "lucide-react";
 import { AlertCircle } from "lucide-react";
-
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
 export default function Home() {
@@ -31,6 +30,7 @@ export default function Home() {
   const cookies = useCookies();
   const UID = cookies.get(UID_COOKIE_NAME) ?? null;
   const userSessionId = useAuth(UID);
+  const router = useRouter();
 
   const formSchema = z.object({
     email: z.string().email({
@@ -49,7 +49,6 @@ export default function Home() {
     },
     mode: "onChange",
   });
-
   const user = auth.currentUser;
   function onSubmit(values: z.infer<typeof formSchema>) {
     console.log(user);
@@ -58,6 +57,7 @@ export default function Home() {
     signIn(values)
       .then(() => {
         console.log("Signed In");
+        router.push("/dashboard");
       })
       .catch((error) => {
         console.log(error.message);
@@ -65,6 +65,7 @@ export default function Home() {
         setError(error.message);
       });
   }
+  
   return (
     <main>
       <div className="flex flex-col items-center justify-center min-h-screen">
