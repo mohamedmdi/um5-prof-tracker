@@ -15,9 +15,10 @@ import { useAuth } from "@/hooks/useAuth";
 import { UID_COOKIE_NAME } from "@/lib/constants";
 import { useCookies } from "next-client-cookies";
 import { auth } from "@/lib/firebase";
-import { updateProfile } from "firebase/auth";
+import { updatePassword, updateProfile } from "firebase/auth";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 export default function Account() {
   const cookies = useCookies();
@@ -25,6 +26,8 @@ export default function Account() {
   const userSessionId = useAuth(UID);
   const user = auth.currentUser;
   const [nom, setNom] = useState("");
+  const [password, setPassword] = useState("");
+  const router = useRouter();
 
   useEffect(() => {
     if (user?.displayName) {
@@ -50,16 +53,37 @@ export default function Account() {
             </CardHeader>
             <CardContent className="space-y-2">
               <div className="space-y-1">
-                <Label htmlFor="current">Current password</Label>
-                <Input id="current" type="password" />
-              </div>
-              <div className="space-y-1">
                 <Label htmlFor="new">New password</Label>
-                <Input id="new" type="password" />
+                <Input
+                  id="new"
+                  type="password"
+                  onChange={(e) => {
+                    setPassword(e.target.value);
+                  }}
+                />
               </div>
             </CardContent>
             <CardFooter>
-              <Button>Enregistrer le mot de passe</Button>
+              <Button
+                onClick={() => {
+                  if (user) {
+                    updatePassword(user, password)
+                      .then(() => {
+                        toast("votre mot de passe a été mis à jour", {
+                          dismissible: true,
+                        });
+                        setInterval(() => {
+                          router.push("/dashboard");
+                        }, 1000);
+                      })
+                      .catch((error) => {
+                        console.log(error);
+                      });
+                  }
+                }}
+              >
+                Enregistrer le mot de passe
+              </Button>
             </CardFooter>
           </Card>
         </TabsContent>
@@ -76,7 +100,10 @@ export default function Account() {
               <div className="flex flex-col gap-4">
                 <div className="flex flex-row items-baseline gap-3">
                   <Label htmlFor="email">Email: </Label>
-                  <span id="email" className="text-muted-foreground font-semibold">
+                  <span
+                    id="email"
+                    className="text-muted-foreground font-semibold"
+                  >
                     {" "}
                     {user?.email}{" "}
                   </span>

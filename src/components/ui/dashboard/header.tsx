@@ -17,6 +17,7 @@ import {
 } from "@/components/ui/popover";
 import { Separator } from "../separator";
 import { useRouter } from "next/navigation";
+import Avatar from "react-avatar";
 
 const Header = () => {
   const cookies = useCookies();
@@ -33,9 +34,16 @@ const Header = () => {
           <Popover>
             <PopoverTrigger asChild>
               {user ? (
-                <Button variant="outline">
-                  {user.displayName ? user.displayName : user.email}
-                </Button>
+                <div className="flex flex-row gap-2 items-center hover:cursor-pointer">
+                  <Avatar
+                    name={user ? user.displayName : "A"}
+                    round={true}
+                    size="48"
+                  />
+                  <Button variant="outline">
+                    {user.displayName ? user.displayName : user.email}
+                  </Button>
+                </div>
               ) : (
                 <div className="flex items-center space-x-2">
                   <Skeleton className="h-12 w-12 rounded-full bg-slate-300" />
@@ -59,8 +67,8 @@ const Header = () => {
                   >
                     <g fill="none" stroke="currentColor" strokeWidth="2">
                       <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
                         d="M14 21h-4l-.551-2.48a6.991 6.991 0 0 1-1.819-1.05l-2.424.763l-2-3.464l1.872-1.718a7.055 7.055 0 0 1 0-2.1L3.206 9.232l2-3.464l2.424.763A6.992 6.992 0 0 1 9.45 5.48L10 3h4l.551 2.48a6.992 6.992 0 0 1 1.819 1.05l2.424-.763l2 3.464l-1.872 1.718a7.05 7.05 0 0 1 0 2.1l1.872 1.718l-2 3.464l-2.424-.763a6.99 6.99 0 0 1-1.819 1.052z"
                       />
                       <circle cx="12" cy="12" r="3" />
@@ -92,8 +100,8 @@ const Header = () => {
                       <path
                         fill="none"
                         stroke="currentColor"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
                         strokeWidth="2"
                         d="M15 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h8m4-9l-4-4m4 4l-4 4m4-4H9"
                       />
