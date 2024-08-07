@@ -32,8 +32,10 @@ const Header = () => {
         <div className="flex flex-row space-x-4 font-semibold text-sky-700">
           <Popover>
             <PopoverTrigger asChild>
-              {user?.email ? (
-                <Button variant="outline">{user?.email}</Button>
+              {user ? (
+                <Button variant="outline">
+                  {user.displayName ? user.displayName : user.email}
+                </Button>
               ) : (
                 <div className="flex items-center space-x-2">
                   <Skeleton className="h-12 w-12 rounded-full bg-slate-300" />
@@ -55,7 +57,7 @@ const Header = () => {
                     height="22"
                     viewBox="0 0 24 24"
                   >
-                    <g fill="none" stroke="currentColor" stroke-width="2">
+                    <g fill="none" stroke="currentColor" strokeWidth="2">
                       <path
                         stroke-linecap="round"
                         stroke-linejoin="round"
@@ -92,7 +94,7 @@ const Header = () => {
                         stroke="currentColor"
                         stroke-linecap="round"
                         stroke-linejoin="round"
-                        stroke-width="2"
+                        strokeWidth="2"
                         d="M15 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h8m4-9l-4-4m4 4l-4 4m4-4H9"
                       />
                     </svg>

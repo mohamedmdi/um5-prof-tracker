@@ -1,5 +1,6 @@
 import Header from "@/components/ui/dashboard/header";
 import Footer from "@/components/ui/dashboard/footer";
+import { Toaster } from "sonner";
 
 export default function layoutAdmin({
   children,
@@ -13,6 +14,7 @@ export default function layoutAdmin({
         <div className="container mx-auto p-0 flex-1 flex">{children}</div>
       </div>
       <Footer className="mt-auto" />
+      <Toaster />
     </div>
   );
 }
