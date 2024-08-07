@@ -1,5 +1,10 @@
 import Header from "@/components/ui/dashboard/header";
 import Footer from "@/components/ui/dashboard/footer";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Dashboard - UM5-FSJES Gestion Profs"
+};
 
 export default function layoutAdmin({
   children,

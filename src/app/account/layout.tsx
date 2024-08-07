@@ -1,6 +1,11 @@
 import Header from "@/components/ui/dashboard/header";
 import Footer from "@/components/ui/dashboard/footer";
 import { Toaster } from "sonner";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Account - UM5-FSJES Gestion Profs"
+};
 
 export default function layoutAdmin({
   children,
