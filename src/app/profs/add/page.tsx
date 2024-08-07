@@ -67,10 +67,10 @@ export default function AddProf() {
 
   return (
     <main className="flex w-full flex-col items-center justify-center">
-      <div className="flex flex-col w-auto md:w-1/2 mt-24">
+      <div className="flex flex-col w-auto md:w-2/5 mt-24">
         <h2 className="text-2xl font-bold uppercase">Ajouter Prof</h2>
       </div>
-      <div className="flex flex-col w-auto md:w-1/2 m-5 p-6 border-2 rounded-lg items-center justify-center mt-5">
+      <div className="flex flex-col w-auto md:w-2/5 m-5 p-6 border-2 rounded-lg items-center justify-center mt-5">
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(onSubmit)}
@@ -161,7 +161,9 @@ export default function AddProf() {
                             field.onChange(input);
                             setError("");
                           } else {
-                            setError("Numero n'est pas obligatoire mais, veuillez entrer un Numero valide");
+                            setError(
+                              "Numero n'est pas obligatoire mais, veuillez entrer un Numero valide"
+                            );
                             field.onChange("");
                           }
                         }}
@@ -189,12 +191,9 @@ export default function AddProf() {
                 )}
               </FormItem>
             </div>
-            <div className="flex flex-row gap-5">
-              <Link href="/dashboard">
-                <Button className="w-full">Annuler</Button>
-              </Link>
+            
               <Button
-                className={` w-full bg-sky-700 hover:bg-sky-900 flex flex-row justify-center items-center gap-2  ${
+                className={` bg-sky-700 hover:bg-sky-900 flex flex-row justify-center items-center gap-2  ${
                   submitting && " disabled:bg-sky-400"
                 }`}
                 disabled={submitting}
@@ -206,7 +205,6 @@ export default function AddProf() {
                 <CirclePlus />
                 Ajouter Prof
               </Button>
-            </div>
           </form>
         </Form>
       </div>

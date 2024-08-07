@@ -20,7 +20,7 @@ export default async function Dashboard() {
     .then((data) => data)
     .catch((error) => error);
   return (
-    <main className="flex flex-col items-center justify-between p-16">
+    <main className="flex flex-col items-center p-16 flex-1">
       <AddButton/>
       <div className="w-full">
         <div className="py-4">

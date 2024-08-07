@@ -1,13 +1,15 @@
 import { type NextRequest, NextResponse } from "next/server";
 import {
   HOME_ROUTE,
+  ACCOUNT_ROUTE,
+  PROFS_ROUTE,
   ROOT_ROUTE,
   SESSION_COOKIE_NAME,
   UID_COOKIE_NAME,
 } from "@/lib/constants";
 import axios from "axios";
 
-const protectedRoutes = [HOME_ROUTE];
+const protectedRoutes = [HOME_ROUTE, ACCOUNT_ROUTE, PROFS_ROUTE];
 
 const verifyToken = async (token: string) => {
   try {
@@ -25,7 +27,6 @@ const verifyToken = async (token: string) => {
 export default async function middleware(request: NextRequest) {
   const session = request.cookies.get(SESSION_COOKIE_NAME)?.value || "";
   const isVerified = session ? await verifyToken(session) : null;
-  
 
   if (request.nextUrl.pathname === "/") {
     if (session && isVerified == 200)
@@ -33,9 +34,17 @@ export default async function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
-  if (protectedRoutes.includes(request.nextUrl.pathname)) {
+  if (
+    protectedRoutes.some((route) => request.nextUrl.pathname.includes(route))
+  ) {
     if (!session || isVerified == 401 || isVerified == 500)
-      return NextResponse.redirect(new URL("/", request.url));
+      return NextResponse.redirect(new URL(ROOT_ROUTE, request.url));
+    if (
+      request.nextUrl.pathname.includes("/modify") &&
+      !request.nextUrl.search
+    ) {
+      return NextResponse.redirect(new URL(HOME_ROUTE, request.url));
+    }
     return NextResponse.next();
   }
   return NextResponse.next();

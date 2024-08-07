@@ -27,6 +27,8 @@ export default function Account() {
   const user = auth.currentUser;
   const [nom, setNom] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const [submited, setSubmited] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
@@ -35,6 +37,46 @@ export default function Account() {
     }
   }, [user]);
 
+  const handlePasswordChange = () => {
+    if (password && user) {
+      setSubmited(true);
+      updatePassword(user, password)
+        .then(() => {
+          setSubmited(false);
+          toast("votre mot de passe a été mis à jour", {
+            dismissible: true,
+          });
+          setTimeout(() => {
+            router.push("/dashboard");
+          }, 1000);
+        })
+        .catch((error) => {
+          setSubmited(false);
+          setError(error.code);
+          console.log(error);
+        });
+    }
+  };
+  const handleProfileChange = () => {
+    if (nom && user) {
+      setSubmited(true);
+      updateProfile(user, {
+        displayName: nom,
+      })
+        .then(() => {
+          console.log("Profile updated!");
+          toast("votre compte a été mis à jour", {
+            dismissible: true,
+          });
+          setSubmited(false);
+          router.refresh();
+        })
+        .catch((error) => {
+          console.error(error);
+          setSubmited(false);
+        });
+    }
+  };
   return (
     <div className="flex flex-col items-center flex-1 mt-24">
       <Tabs defaultValue="password" className="w-[400px]">
@@ -64,26 +106,20 @@ export default function Account() {
               </div>
             </CardContent>
             <CardFooter>
-              <Button
-                onClick={() => {
-                  if (user) {
-                    updatePassword(user, password)
-                      .then(() => {
-                        toast("votre mot de passe a été mis à jour", {
-                          dismissible: true,
-                        });
-                        setInterval(() => {
-                          router.push("/dashboard");
-                        }, 1000);
-                      })
-                      .catch((error) => {
-                        console.log(error);
-                      });
-                  }
-                }}
-              >
-                Enregistrer le mot de passe
-              </Button>
+              <div className="flex flex-col gap-2">
+                <Button
+                  disabled={submited}
+                  className="max-w-min"
+                  onClick={handlePasswordChange}
+                >
+                  Enregistrer le mot de passe
+                </Button>
+                {error && (
+                  <span className="text-red-500 text-center font-semibold text-md">
+                    {error}
+                  </span>
+                )}
+              </div>
             </CardFooter>
           </Card>
         </TabsContent>
@@ -104,7 +140,6 @@ export default function Account() {
                     id="email"
                     className="text-muted-foreground font-semibold"
                   >
-                    {" "}
                     {user?.email}{" "}
                   </span>
                 </div>
@@ -119,25 +154,7 @@ export default function Account() {
               </div>
             </CardContent>
             <CardFooter>
-              <Button
-                disabled={!nom}
-                onClick={() => {
-                  if (user) {
-                    updateProfile(user, {
-                      displayName: nom,
-                    })
-                      .then(() => {
-                        console.log("Profile updated!");
-                        toast("votre compte a été mis à jour", {
-                          dismissible: true,
-                        });
-                      })
-                      .catch((error) => {
-                        console.error(error);
-                      });
-                  }
-                }}
-              >
+              <Button disabled={!nom || submited} onClick={handleProfileChange}>
                 Sauvegarder
               </Button>
             </CardFooter>
