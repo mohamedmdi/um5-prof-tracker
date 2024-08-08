@@ -3,6 +3,7 @@ import { db } from "@/lib/firebase";
 import {
   addDoc,
   collection,
+  deleteDoc,
   doc,
   getDocs,
   setDoc,
@@ -43,6 +44,23 @@ export async function PUT(request: NextRequest) {
     console.log("Document UPDATED with ID: ", docRef);
     return NextResponse.json({
       message: "Document updated",
+      status: 200,
+    });
+  } catch (error) {
+    console.log(error);
+    return NextResponse.json({
+      error: error,
+      status: 500,
+    });
+  }
+}
+
+export async function DELETE(request: NextRequest) {
+  const prof = await request.json();
+  try {
+    await deleteDoc(doc(db, "cities", prof.id));
+    return NextResponse.json({
+      message: "Document Deleted",
       status: 200,
     });
   } catch (error) {

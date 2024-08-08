@@ -106,14 +106,21 @@ export const columns: ColumnDef<Prof>[] = [
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
             <DropdownMenuItem>
               <Link
-              className="w-full"
-                href={`/profs/modify/?id=${prof.id}&nom=${prof.nom}&prenom=${prof.prenom}&cat=${prof.cat}&daterec=${prof.daterec.replace(/\//g, "-")}&num=${prof.num}`}
+                className="w-full"
+                href={`/profs/modify/?id=${prof.id}&nom=${prof.nom}&prenom=${
+                  prof.prenom
+                }&cat=${prof.cat}&daterec=${prof.daterec.replace(
+                  /\//g,
+                  "-"
+                )}&num=${prof.num}`}
               >
                 Modifier
               </Link>
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>
+            <DropdownMenuItem onClick={()=>{
+              console.log("Supprimer")
+            }}>
               <span className="text-red-500 hover:cursor-pointer font-semibold">
                 Supprimer
               </span>

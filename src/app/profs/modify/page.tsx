@@ -10,7 +10,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { doc, updateDoc } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { toast } from "sonner";
-
+import { Label } from "@/components/ui/label";
 
 export default function AddProf() {
   const [submitting, setSubmitting] = useState(false);
@@ -48,7 +48,7 @@ export default function AddProf() {
   const calculateCategory = (date: string | null) => {
     if (date) {
       const diffDate = differenceInDays(new Date(), new Date(date));
-      if (diffDate < 1825) setCategory("A");
+      if (diffDate <= 1825) setCategory("A");
       else if (diffDate >= 1826 && diffDate < 3650) setCategory("B");
       else if (diffDate >= 3651 && diffDate < 5475) setCategory("C");
       else setCategory("D");
@@ -93,52 +93,68 @@ export default function AddProf() {
         <form onSubmit={onSubmit} className="space-y-8 w-full">
           <div className="space-y-3">
             <div className="flex flex-row gap-5">
-              <Input
-                value={prof.nom}
-                onChange={(e) => {
-                  setProf({ ...prof, nom: e.target.value });
-                }}
-                className="w-full border-2 border-slate-300"
-              />
+              <div className="flex flex-col items-start space-y-2 w-full">
+                <Label htmlFor="nom">Nom</Label>
+                <Input
+                  id="nom"
+                  value={prof.nom}
+                  onChange={(e) => {
+                    setProf({ ...prof, nom: e.target.value });
+                  }}
+                  className="w-full border-2 border-slate-300"
+                />
+              </div>
+              <div className="flex flex-col items-start space-y-2  w-full">
+                <Label htmlFor="prenom">Prenom</Label>
 
+                <Input
+                  id="prenom"
+                  value={prof.prenom}
+                  onChange={(e) => {
+                    setProf({ ...prof, prenom: e.target.value });
+                  }}
+                  className="w-full border-2 border-slate-300"
+                />
+              </div>
+            </div>
+
+            <div className="flex flex-col items-start space-y-2  w-full">
+              <Label htmlFor="date">Date de Recrutement</Label>
               <Input
-                value={prof.prenom}
+                id="date"
+                type="date"
+                value={prof.daterec}
+                placeholder="JJ/MM/AAAA"
+                className="w-full border-2 border-slate-300"
                 onChange={(e) => {
-                  setProf({ ...prof, prenom: e.target.value });
+                  const inputDate = new Date(e.target.value);
+                  const minDate = new Date("1900-01-01");
+                  const maxDate = new Date();
+                  if (
+                    e.target.value &&
+                    inputDate >= minDate &&
+                    inputDate <= maxDate
+                  ) {
+                    calculateCategory(format(e.target.value, "dd/MM/yyyy"));
+                    setProf({ ...prof, daterec: e.target.value });
+                  } else {
+                    setProf({ ...prof, daterec: e.target.value });
+                    setCategory("");
+                  }
+                }}
+              />
+            </div>
+            <div className="flex flex-col items-start space-y-2  w-full">
+              <Label htmlFor="num">Numero de Telephone</Label>
+              <Input
+                id="num"
+                value={prof.num}
+                onChange={(e) => {
+                  setProf({ ...prof, num: e.target.value });
                 }}
                 className="w-full border-2 border-slate-300"
               />
             </div>
-
-            <Input
-              type="date"
-              value={prof.daterec}
-              placeholder="JJ/MM/AAAA"
-              className="w-full border-2 border-slate-300"
-              onChange={(e) => {
-                const inputDate = new Date(e.target.value);
-                const minDate = new Date("1900-01-01");
-                const maxDate = new Date();
-                if (
-                  e.target.value &&
-                  inputDate >= minDate &&
-                  inputDate <= maxDate
-                ) {
-                  calculateCategory(format(e.target.value, "dd/MM/yyyy"));
-                  setProf({ ...prof, daterec: e.target.value });
-                } else {
-                  setProf({ ...prof, daterec: e.target.value });
-                  setCategory("");
-                }
-              }}
-            />
-            <Input
-              value={prof.num}
-              onChange={(e) => {
-                setProf({ ...prof, num: e.target.value });
-              }}
-              className="w-full border-2 border-slate-300"
-            />
             {error && (
               <div className="mt-1">
                 <span className="text-slate-900 text-sm max-w-full">
