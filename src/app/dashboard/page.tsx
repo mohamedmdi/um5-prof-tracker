@@ -1,8 +1,7 @@
-
 import AddButton from "@/components/ui/dashboard/add";
 import React from "react";
 import { DataTable } from "../dashboard/data-table";
-import { columns } from "../dashboard/columns";
+import { Prof } from "../dashboard/columns";
 import axios from "axios";
 
 async function getProfs() {
@@ -16,15 +15,15 @@ async function getProfs() {
 }
 
 export default async function Dashboard() {
-  const data = await getProfs()
+  const data: Prof[] = await getProfs()
     .then((data) => data)
     .catch((error) => error);
   return (
     <main className="flex flex-col items-center p-16 flex-1">
-      <AddButton/>
+      <AddButton />
       <div className="w-full">
         <div className="py-4">
-          <DataTable columns={columns} data={data} />
+          <DataTable data={data} />
         </div>
       </div>
       <div className="relative z-[-1] flex place-items-center"></div>

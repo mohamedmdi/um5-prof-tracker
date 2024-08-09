@@ -9,6 +9,7 @@ import {
   setDoc,
   updateDoc,
 } from "firebase/firestore";
+import { redirect } from "next/navigation";
 
 export async function GET(request: NextRequest) {
   const querySnapshot = await getDocs(collection(db, "profslist"));
@@ -56,9 +57,10 @@ export async function PUT(request: NextRequest) {
 }
 
 export async function DELETE(request: NextRequest) {
-  const prof = await request.json();
+  const { id } = await request.json();
+  console.log("api/profs => id: ", id);
   try {
-    await deleteDoc(doc(db, "cities", prof.id));
+    await deleteDoc(doc(db, "profslist", id));
     return NextResponse.json({
       message: "Document Deleted",
       status: 200,
