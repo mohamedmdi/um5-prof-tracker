@@ -21,11 +21,13 @@ import { CirclePlus, Loader2 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { setProfs } from "@/actions/profs-actions";
 import { formSchema } from "@/lib/utils";
+import { useRouter } from "next/navigation";
 
 export default function AddProf() {
   const [submitting, setSubmitting] = useState(false);
   const [category, setCategory] = useState<String>("");
   const [error, setError] = useState<String>("");
+  const router = useRouter(); 
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -57,6 +59,8 @@ export default function AddProf() {
       .then((data) => {
         console.log("Add => : data : ", data);
         setSubmitting(false);
+        router.push('/dashboard')
+        router.refresh()
       })
       .catch((error) => {
         console.log("Add => : error : ", error);
