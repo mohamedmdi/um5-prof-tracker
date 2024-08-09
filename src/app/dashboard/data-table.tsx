@@ -70,7 +70,7 @@ export function DataTable({ data }: { data: Prof[] }) {
   return (
     <div className="rounded-md border">
       <div className="m-4">
-        <div className="flex items-center py-4 flex-row gap-5">
+        <div className="flex items-center py-4 flex-row gap-5 justify-between">
           <Input
             placeholder="Filter par nom..."
             value={(table.getColumn("nom")?.getFilterValue() as string) ?? ""}

@@ -25,6 +25,7 @@ import {
 
 import Link from "next/link";
 import axios from "axios";
+import { removeProfs } from "@/actions/profs-actions";
 
 export type Prof = {
   id: string;
@@ -164,17 +165,11 @@ export function getColums({
                     <AlertDialogAction
                       className="bg-red-500 hover:bg-red-600"
                       onClick={async () => {
-                        await axios
-                          .delete(`http://localhost:3000/api/profs/`, {
-                            data: { id: prof.id },
-                          })
-                          .then((response) => {
-                            refresh();
-                            console.log(response);
-                          })
-                          .catch((error) => {
-                            console.error(error);
-                          });
+                        console.log("Clicked");
+                        await removeProfs(prof.id).then(() => {
+                          refresh();
+                          // console.log("Deleted");
+                        });
                       }}
                     >
                       Continue
