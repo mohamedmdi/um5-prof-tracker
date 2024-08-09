@@ -81,7 +81,7 @@ export function DataTable({ data }: { data: Prof[] }) {
           />
           <div
             onClick={() => router.refresh()}
-            className="flex flex-row items-center gap-1 p-1 px-2 bg-slate-100 bg-opacity-0 hover:bg-opacity-100 transition-all duration-100 ease-in-out rounded-xl cursor-pointer"
+            className="flex flex-row items-center gap-1 p-1 px-2 bg-slate-200 bg-opacity-50 hover:bg-opacity-100 transition-all duration-100 ease-in-out rounded-xl cursor-pointer"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
