@@ -19,6 +19,7 @@ import { Separator } from "../separator";
 import { useRouter } from "next/navigation";
 import Avatar from "react-avatar";
 import { useEffect } from "react";
+import { Trash2 } from "lucide-react";
 
 const Header = () => {
   const cookies = useCookies();
@@ -29,14 +30,14 @@ const Header = () => {
 
   return (
     <div className="w-full bg-gray-50 border-b-4 border-sky-700">
-      <header className="container mx-auto h-20 flex justify-between items-center ">
-        <div className="flex flex-row gap-8 items-center">
+      <header className="mx-2 md:mx-20 h-20 flex items-center ">
+        <div className="flex flex-row items-center flex-1 md:space-x-2">
           <Image
             src={"/unnamed.gif"}
             alt="Logo"
             width={80}
             height={80}
-            className="mr-2 md:mr-24"
+            className="mr-2"
             priority={true}
             draggable="false"
           />
@@ -45,18 +46,22 @@ const Header = () => {
               variant="secondary"
               className="hover:bg-slate-200 flex flex-row gap-1 bg-transparent"
             >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  fill="currentColor"
-                  d="M4 3h6c.55 0 1 .45 1 1v6c0 .55-.45 1-1 1H4c-.55 0-1-.45-1-1V4c0-.55.45-1 1-1m10 0h6c.55 0 1 .45 1 1v6c0 .55-.45 1-1 1h-6c-.55 0-1-.45-1-1V4c0-.55.45-1 1-1M4 13h6c.55 0 1 .45 1 1v6c0 .55-.45 1-1 1H4c-.55 0-1-.45-1-1v-6c0-.55.45-1 1-1m13 0c-.55 0-1 .45-1 1v2h-2c-.55 0-1 .45-1 1s.45 1 1 1h2v2c0 .55.45 1 1 1s1-.45 1-1v-2h2c.55 0 1-.45 1-1s-.45-1-1-1h-2v-2c0-.55-.45-1-1-1"
-                />
-              </svg>
-              Table de bord
+              <div title="Table de bord">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    fill="currentColor"
+                    d="M4 3h6c.55 0 1 .45 1 1v6c0 .55-.45 1-1 1H4c-.55 0-1-.45-1-1V4c0-.55.45-1 1-1m10 0h6c.55 0 1 .45 1 1v6c0 .55-.45 1-1 1h-6c-.55 0-1-.45-1-1V4c0-.55.45-1 1-1M4 13h6c.55 0 1 .45 1 1v6c0 .55-.45 1-1 1H4c-.55 0-1-.45-1-1v-6c0-.55.45-1 1-1m13 0c-.55 0-1 .45-1 1v2h-2c-.55 0-1 .45-1 1s.45 1 1 1h2v2c0 .55.45 1 1 1s1-.45 1-1v-2h2c.55 0 1-.45 1-1s-.45-1-1-1h-2v-2c0-.55-.45-1-1-1"
+                  />
+                </svg>
+              </div>
+              <span className="hidden md:block" title="Table de bord">
+                Table de bord
+              </span>
             </Button>
           </Link>
           <Link href="/dashboard">
@@ -64,20 +69,37 @@ const Header = () => {
               variant="secondary"
               className="hover:bg-slate-200 flex flex-row gap-1 bg-transparent"
             >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                viewBox="0 0 36 36"
-              >
-                <path
-                  fill="currentColor"
-                  d="M32 5H4a2 2 0 0 0-2 2v22a2 2 0 0 0 2 2h28a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2m-9.44 20.94l-7.1-10.58l-6.34 9.28l-4.5-4L6 19.05l2.7 2.39l6.76-9.88l7.19 10.71l7-9.27l1.7 1.28Z"
-                  className="clr-i-solid clr-i-solid-path-1"
-                />
-                <path fill="none" d="M0 0h36v36H0z" />
-              </svg>
-              Analytique
+              <div title="Analytique">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 36 36"
+                >
+                  <path
+                    fill="currentColor"
+                    d="M32 5H4a2 2 0 0 0-2 2v22a2 2 0 0 0 2 2h28a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2m-9.44 20.94l-7.1-10.58l-6.34 9.28l-4.5-4L6 19.05l2.7 2.39l6.76-9.88l7.19 10.71l7-9.27l1.7 1.28Z"
+                    className="clr-i-solid clr-i-solid-path-1"
+                  />
+                  <path fill="none" d="M0 0h36v36H0z" />
+                </svg>
+              </div>
+              <span className="hidden md:block" title="Analytique">
+                Analytique
+              </span>
+            </Button>
+          </Link>
+          <Link href="/dashboard/deleted">
+            <Button
+              variant="secondary"
+              className="hover:bg-slate-200 flex flex-row gap-1 bg-transparent"
+            >
+              <div title="Corbeille">
+                <Trash2 className="w-5 h-5" />
+              </div>
+              <span className="hidden md:block" title="Corbeille">
+                Corbeille
+              </span>
             </Button>
           </Link>
         </div>

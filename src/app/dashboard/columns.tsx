@@ -25,7 +25,7 @@ import {
 
 import Link from "next/link";
 import axios from "axios";
-import { removeProfs } from "@/actions/profs-actions";
+import { removeProfs, softRemoveProfs } from "@/actions/profs-actions";
 
 export type Prof = {
   id: string;
@@ -38,8 +38,10 @@ export type Prof = {
 
 export function getColums({
   refresh,
+  isDeleted,
 }: {
   refresh: () => void;
+  isDeleted: boolean;
 }): ColumnDef<Prof>[] {
   return [
     {
@@ -65,6 +67,7 @@ export function getColums({
       enableHiding: false,
     },
     {
+      id: "nom",
       accessorKey: "nom",
       header: "Nom",
       cell: ({ row }) => (
@@ -79,7 +82,11 @@ export function getColums({
       ),
     },
     {
+      id: "cat",
       accessorKey: "cat",
+      filterFn: (row, id, value) => {
+        return value.includes(row.getValue(id));
+      },
       header: ({ column }) => {
         return (
           <Button
@@ -96,6 +103,11 @@ export function getColums({
     },
     {
       accessorKey: "daterec",
+      sortingFn: (rowA, rowB, columnId) => {
+        const dateA = new Date(rowA.getValue(columnId));
+        const dateB = new Date(rowB.getValue(columnId));
+        return dateA.getTime() - dateB.getTime();
+      },
       header: ({ column }) => {
         return (
           <Button
@@ -111,7 +123,15 @@ export function getColums({
       cell: ({ row }) => <div>{row.getValue("daterec")}</div>,
     },
     {
+      accessorKey: "num",
+      header: "Telephone",
+      cell: ({ row }) => (
+        <div className="capitalize">{row.getValue("num")}</div>
+      ),
+    },
+    {
       id: "actions",
+      header: "Actions",
       enableHiding: false,
       cell: ({ table, row }) => {
         const prof = row.original;
@@ -125,60 +145,78 @@ export function getColums({
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
               <DropdownMenuLabel>Actions</DropdownMenuLabel>
-              <DropdownMenuItem>
-                <Link
-                  className="w-full"
-                  href={`/profs/modify/?id=${prof.id}&nom=${prof.nom}&prenom=${
-                    prof.prenom
-                  }&cat=${prof.cat}&daterec=${prof.daterec.replace(
-                    /\//g,
-                    "-"
-                  )}&num=${prof.num}`}
-                >
-                  <span className="hover:cursor-pointer hover:bg-slate-100">
-                    Modifier
-                  </span>
-                </Link>
-              </DropdownMenuItem>
+              {!isDeleted && (
+                <DropdownMenuItem>
+                  <Link
+                    className="w-full"
+                    href={`/profs/modify/?id=${prof.id}&nom=${
+                      prof.nom
+                    }&prenom=${prof.prenom}&cat=${
+                      prof.cat
+                    }&daterec=${prof.daterec.replace(/\//g, "-")}&num=${
+                      prof.num
+                    }`}
+                  >
+                    <span className="hover:cursor-pointer hover:bg-slate-100">
+                      Modifier
+                    </span>
+                  </Link>
+                </DropdownMenuItem>
+              )}
               <DropdownMenuSeparator />
-              <AlertDialog>
-                <AlertDialogTrigger
-                  className="relative flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50"
-                  asChild
+              {isDeleted ? (
+                <DropdownMenuItem
+                  className="bg-transparent hover:bg-transparent transition-none p-0"
+                  onClick={async () => {
+                    console.log("Clicked");
+                    await softRemoveProfs(prof.id, false).then(() => {
+                      refresh();
+                      // console.log("Deleted");
+                    });
+                  }}
                 >
-                  <span className="text-red-500 hover:cursor-pointer hover:bg-slate-100">
-                    Supprimer
+                  <span className="text-sky-500 hover:text-sky-600 w-full hover:cursor-pointer p-2 rounded-sm">
+                    Récupérer
                   </span>
-                </AlertDialogTrigger>
-                <AlertDialogContent>
-                  <AlertDialogHeader>
-                    <AlertDialogTitle>
-                      Êtes-vous absolument sûr ?
-                    </AlertDialogTitle>
-                    <AlertDialogDescription>
-                      Cette action est irréversible. Elle supprimera
-                      définitivement les données.
-                    </AlertDialogDescription>
-                  </AlertDialogHeader>
-                  <AlertDialogFooter>
-                    <AlertDialogCancel>Cancel</AlertDialogCancel>
-                    <AlertDialogAction
-                      className="bg-red-500 hover:bg-red-600"
-                      onClick={async () => {
-                        console.log("Clicked");
-                        await removeProfs(prof.id).then(() => {
-                          refresh();
-                          // console.log("Deleted");
-                        });
-                      }}
-                    >
-                      Continue
-                    </AlertDialogAction>
-                  </AlertDialogFooter>
-                </AlertDialogContent>
-              </AlertDialog>
-
-              <DropdownMenuItem>View payment details</DropdownMenuItem>
+                </DropdownMenuItem>
+              ) : (
+                <AlertDialog>
+                  <AlertDialogTrigger
+                    className="relative flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50"
+                    asChild
+                  >
+                    <span className="text-red-500 hover:cursor-pointer hover:bg-slate-100">
+                      Supprimer
+                    </span>
+                  </AlertDialogTrigger>
+                  <AlertDialogContent>
+                    <AlertDialogHeader>
+                      <AlertDialogTitle>
+                        Êtes-vous absolument sûr ?
+                      </AlertDialogTitle>
+                      <AlertDialogDescription>
+                        Cette action est irréversible. Elle supprimera
+                        définitivement les données.
+                      </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                      <AlertDialogCancel>Cancel</AlertDialogCancel>
+                      <AlertDialogAction
+                        className="bg-red-500 hover:bg-red-600"
+                        onClick={async () => {
+                          console.log("Clicked");
+                          await softRemoveProfs(prof.id, true).then(() => {
+                            refresh();
+                            // console.log("Deleted");
+                          });
+                        }}
+                      >
+                        Supprimer
+                      </AlertDialogAction>
+                    </AlertDialogFooter>
+                  </AlertDialogContent>
+                </AlertDialog>
+              )}
             </DropdownMenuContent>
           </DropdownMenu>
         );

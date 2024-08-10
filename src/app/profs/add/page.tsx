@@ -17,7 +17,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { CirclePlus, Loader2 } from "lucide-react";
+import { Loader2, Plus } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { setProfs } from "@/actions/profs-actions";
 import { formSchema } from "@/lib/utils";
@@ -27,7 +27,7 @@ export default function AddProf() {
   const [submitting, setSubmitting] = useState(false);
   const [category, setCategory] = useState<String>("");
   const [error, setError] = useState<String>("");
-  const router = useRouter(); 
+  const router = useRouter();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -59,8 +59,8 @@ export default function AddProf() {
       .then((data) => {
         console.log("Add => : data : ", data);
         setSubmitting(false);
-        router.push('/dashboard')
-        router.refresh()
+        router.push("/dashboard");
+        router.refresh();
       })
       .catch((error) => {
         console.log("Add => : error : ", error);
@@ -195,20 +195,18 @@ export default function AddProf() {
                 )}
               </FormItem>
             </div>
-            
-              <Button
-                className={` bg-sky-700 hover:bg-sky-900 flex flex-row justify-center items-center gap-2  ${
-                  submitting && " disabled:bg-sky-400"
-                }`}
-                disabled={submitting}
-                type="submit"
-              >
-                {submitting && (
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                )}
-                <CirclePlus />
-                Ajouter Prof
-              </Button>
+
+            <Button
+              className={` bg-sky-700 hover:bg-sky-900 flex flex-row justify-center items-center gap-2  ${
+                submitting && " disabled:bg-sky-400"
+              }`}
+              disabled={submitting}
+              type="submit"
+            >
+              {submitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+              <Plus />
+              Ajouter Prof
+            </Button>
           </form>
         </Form>
       </div>

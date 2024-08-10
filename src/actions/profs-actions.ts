@@ -17,7 +17,7 @@ export async function setProfs(values: z.infer<typeof formSchema>) {
     if (axios.isAxiosError(error)) return error.response?.status || 500;
   }
 }
-export async function modifyProfs(values : any) {
+export async function modifyProfs(values: any) {
   "use server";
   try {
     console.log("Modify => : values : ", values);
@@ -29,14 +29,28 @@ export async function modifyProfs(values : any) {
   }
 }
 
-export async function removeProfs(id : any) {
+export async function removeProfs(id: any) {
   "use server";
   try {
     console.log("Delete => : values : ", id);
     const response = await axios.delete(`http://localhost:3000/api/profs/`, {
       data: { id: id },
-    })
+    });
     console.log("Modify => : response.data : ", response.data);
+    return response.data;
+  } catch (error) {
+    if (axios.isAxiosError(error)) return error.response?.status || 500;
+  }
+}
+export async function softRemoveProfs(id: any, isDeleted: boolean) {
+  "use server";
+  try {
+    console.log("Soft Delete => : values : ", id);
+    const response = await axios.patch(`http://localhost:3000/api/profs/`, {
+      id: id,
+      isDeleted,
+    });
+    console.log("Soft Delete => : response.data : ", response.data);
     return response.data;
   } catch (error) {
     if (axios.isAxiosError(error)) return error.response?.status || 500;

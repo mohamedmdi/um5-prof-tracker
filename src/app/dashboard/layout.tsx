@@ -12,13 +12,15 @@ export default function layoutAdmin({
   children: React.ReactNode;
 }) {
   return (
-    <div className="flex w-full flex-col min-h-screen">
-      <div className="flex-1 flex flex-col">
+    <div className="flex flex-col min-h-screen">
+      <header className="sticky top-0 w-full bg-white z-10">
         <Header />
-        <div className="container mx-auto p-0 flex-1 flex justify-center ">
+      </header>
+      <main className="flex-1 flex flex-col">
+        <div className="md:container mx-auto p-0 flex-1 flex justify-center">
           {children}
         </div>
-      </div>
+      </main>
       <Footer className="mt-auto" />
     </div>
   );
