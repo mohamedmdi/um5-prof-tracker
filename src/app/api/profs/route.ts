@@ -26,7 +26,6 @@ export async function GET(request: NextRequest) {
     id: doc.id,
     ...doc.data(),
   }));
-  console.log(docs)
   return NextResponse.json({ profs: docs, length: docs.length, status: 200 });
 }
 
