@@ -18,8 +18,8 @@ export async function GET(request: NextRequest) {
 
   // //Use Firebase Admin to validate the session cookie
   // getAuth
-  // const decodedClaims = await auth().verifySessionCookie(token, true);
-  const decodedClaims = true;
+  const decodedClaims = await auth().verifySessionCookie(token, true);
+  // const decodedClaims = true;
   // console.log("************* decodedClaims *************: "+ decodedClaims);
 
   

@@ -9,10 +9,11 @@ import { Plus } from "lucide-react";
 export default function AddButton({ className }) {
   return (
     <div className={cn("flex flex-col", className)}>
-      <Button className="w-full flex flex-row justify-center">
-        <Plus />
-        <Link href="/profs/add">Ajouter un prof</Link>
-      </Button>
+      <Link href="/profs/add" className="w-full flex flex-row justify-center">
+        <Button className="w-full flex flex-row justify-center">
+          <Plus /> Ajouter un prof
+        </Button>
+      </Link>
     </div>
   );
 }

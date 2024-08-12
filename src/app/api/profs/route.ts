@@ -19,20 +19,25 @@ export async function GET(request: NextRequest) {
     query(
       collection(db, "profslist"),
       where("isDeleted", "==", false),
-      orderBy("createdAt", "desc")
+      orderBy("createdAt", "asc")
     )
   );
   const docs = querySnapshot.docs.map((doc) => ({
     id: doc.id,
     ...doc.data(),
   }));
+  console.log(docs)
   return NextResponse.json({ profs: docs, length: docs.length, status: 200 });
 }
 
 export async function POST(request: NextRequest) {
   const newProf = await request.json();
   try {
-    const docRef = await addDoc(collection(db, "profslist"), newProf);
+    const docRef = await addDoc(collection(db, "profslist"), {
+      ...newProf,
+      createdAt: new Date(),
+      isDeleted: false,
+    });
     console.log("Document written with ID: ", docRef.id);
     return NextResponse.json({
       message: "Document written",
