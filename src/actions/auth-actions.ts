@@ -2,13 +2,25 @@
 
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
-import { HOME_ROUTE, ROOT_ROUTE, SESSION_COOKIE_NAME, UID_COOKIE_NAME } from "@/lib/constants";
+import {
+  HOME_ROUTE,
+  ROOT_ROUTE,
+  SESSION_COOKIE_NAME,
+  UID_COOKIE_NAME,
+} from "@/lib/constants";
 import { customInitApp } from "@/lib/firebase-admin-config";
 import { getAuth } from "firebase-admin/auth";
 
 customInitApp();
 
-export async function createSession({idToken, userId} : {idToken: string, userId: string}) {
+export async function createSession({
+  idToken,
+  userId,
+}: {
+  idToken: string;
+  userId: string;
+}) {
+  let path: string = "/";
   const expiresIn = 60 * 60 * 24 * 14 * 1000; // 14 days
   try {
     const sessionCookie = await getAuth().createSessionCookie(idToken, {
@@ -30,11 +42,11 @@ export async function createSession({idToken, userId} : {idToken: string, userId
     // Set the userId
 
     // Redirect after setting the cookie
-    redirect("/dashboard");
+    path = "/dashboard";
   } catch (error) {
     console.error("Error creating session cookie:", error);
-    redirect(HOME_ROUTE);
   }
+  redirect(path);
 }
 
 export async function removeSession() {
