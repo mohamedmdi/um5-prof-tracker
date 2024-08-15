@@ -1,5 +1,4 @@
 import { initializeApp, getApps, cert } from 'firebase-admin/app';
-import { serviceAccount } from '@/../um5-proftracker-firebase-adminsdk-qewn1-dc38d27ae1.json';
 
 const firebaseAdminConfig = {
     credential: cert({
