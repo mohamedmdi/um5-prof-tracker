@@ -3,7 +3,12 @@ import React from "react";
 import { DataTable } from "../dashboard/data-table";
 import { Prof } from "../dashboard/columns";
 import axios from "axios";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { verifySession } from "@/actions/auth-actions";
+import { cookies } from "next/headers";
+import { SESSION_COOKIE_NAME, UID_COOKIE_NAME } from "@/lib/constants";
+import { getAuth } from "firebase/auth";
+import { initializeApp } from "firebase-admin/app";
+import { auth } from "@/lib/firebase";
 
 async function getProfs() {
   "use server";

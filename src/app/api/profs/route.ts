@@ -12,17 +12,17 @@ import {
   updateDoc,
   where,
 } from "firebase/firestore";
-import { redirect } from "next/navigation";
+import { firestore } from "firebase-admin";
+
+const adminDB = firestore();
+const profRef = adminDB.collection("profslist");
 
 export async function GET(request: NextRequest) {
-  const querySnapshot = await getDocs(
-    query(
-      collection(db, "profslist"),
-      where("isDeleted", "==", false),
-      orderBy("createdAt", "asc")
-    )
-  );
-  const docs = querySnapshot.docs.map((doc) => ({
+  const snapshot = await profRef
+    .where("isDeleted", "==", false)
+    .orderBy("createdAt", "asc")
+    .get();
+  const docs = snapshot.docs.map((doc) => ({
     id: doc.id,
     ...doc.data(),
   }));
@@ -32,12 +32,12 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
   const newProf = await request.json();
   try {
-    const docRef = await addDoc(collection(db, "profslist"), {
+    const docRef = await profRef.doc().set({
       ...newProf,
       createdAt: new Date(),
       isDeleted: false,
     });
-    console.log("Document written with ID: ", docRef.id);
+    console.log("Document written with ID: ", docRef);
     return NextResponse.json({
       message: "Document written",
       status: 200,
@@ -100,7 +100,8 @@ export async function PUT(request: NextRequest) {
   const prof = await request.json();
   const { id, ...restProf } = prof;
   try {
-    const docRef = await updateDoc(doc(db, "profslist", prof.id), restProf);
+    const docRef = await profRef.doc(id).update(restProf);
+    // const docRef = await updateDoc(doc(db, "profslist", prof.id), restProf);
     console.log("Document UPDATED with ID: ", docRef);
     return NextResponse.json({
       message: "Document updated",
@@ -118,11 +119,8 @@ export async function PUT(request: NextRequest) {
 export async function PATCH(request: NextRequest) {
   const { id, isDeleted } = await request.json();
   try {
-    const docRef = await setDoc(
-      doc(db, "profslist", id),
-      { isDeleted },
-      { merge: true }
-    );
+    await profRef.doc(id).update({ isDeleted })
+
     return NextResponse.json({
       message: "Document Soft Deleted",
       status: 200,
@@ -140,7 +138,7 @@ export async function DELETE(request: NextRequest) {
   const { id } = await request.json();
   console.log("api/profs => id: ", id);
   try {
-    await deleteDoc(doc(db, "profslist", id));
+    await profRef.doc().delete()
     return NextResponse.json({
       message: "Document Deleted",
       status: 200,

@@ -10,6 +10,7 @@ import {
 } from "@/lib/constants";
 import { customInitApp } from "@/lib/firebase-admin-config";
 import { getAuth } from "firebase-admin/auth";
+import axios from "axios";
 
 customInitApp();
 
@@ -55,3 +56,16 @@ export async function removeSession() {
 
   redirect(ROOT_ROUTE);
 }
+
+export const verifySession = async (token: string) => {
+  try {
+    const response = await axios.get("http://localhost:3000/api/auth", {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return response.status;
+  } catch (error) {
+    if (axios.isAxiosError(error)) return error.response?.status || 500;
+  }
+};
