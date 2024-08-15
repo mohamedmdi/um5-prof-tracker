@@ -1,8 +1,8 @@
 import { type ClassValue, clsx } from "clsx";
 import { differenceInDays } from "date-fns";
-
 import { twMerge } from "tailwind-merge";
 import { z } from "zod";
+import { mkConfig, generateCsv, download } from "export-to-csv";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -33,3 +33,33 @@ export const calculateCategory = (date: string) => {
   else if (diffDate < 5475) return "C";
   else return "D";
 };
+
+export const csvConfig = mkConfig({
+  fieldSeparator: ",",
+  // quoteStrings: true,
+  columnHeaders: [
+    {
+      key: "nom",
+      displayLabel: "Nom",
+    },
+    {
+      key: "prenom",
+      displayLabel: "Prenom",
+    },
+    {
+      key: "daterec",
+      displayLabel: "Date De Recrutement",
+    },
+    {
+      key: "cat",
+      displayLabel: "Categorie",
+    },
+    {
+      key: "num",
+      displayLabel: "Telephone",
+    },
+  ],
+  filename: "profs",
+  decimalSeparator: ".",
+  useKeysAsHeaders: false,
+});

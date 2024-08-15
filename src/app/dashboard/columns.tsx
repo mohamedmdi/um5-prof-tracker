@@ -52,7 +52,7 @@ export function getColums({
             table.getIsAllPageRowsSelected() ||
             (table.getIsSomePageRowsSelected() && "indeterminate")
           }
-          onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+          onCheckedChange={(value) => table.toggleAllRowsSelected(!!value)}
           aria-label="Select all"
         />
       ),

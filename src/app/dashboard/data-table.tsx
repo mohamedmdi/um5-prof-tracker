@@ -32,10 +32,12 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
-import { ChevronDown } from "lucide-react";
+import { ChevronDown, Download } from "lucide-react";
 import { getColums, Prof } from "./columns";
 import { useRouter } from "next/navigation";
 import { InputButton } from "@/components/ui/inputButton";
+import { generateCsv, download } from "export-to-csv";
+import { csvConfig } from "@/lib/utils";
 
 export function DataTable({
   data,
@@ -95,7 +97,18 @@ export function DataTable({
     C: false,
     D: false,
   });
-
+  const exportCVS = (rows: any) => {
+    const fieldsToRemove = ["createdAt", "isDeleted", "id"];
+    const rowData = rows.map((row : any) => {
+      fieldsToRemove.forEach((field) => {
+        delete row.original[field];
+      });
+      return row.original;
+    });
+    console.log(rowData);
+    const csv = generateCsv(csvConfig)(rowData);
+    download(csvConfig)(csv);
+  };
   const filterCategory = (cat: Category) => {
     // Toggle the selected category
     const updatedFilteredCat: any = {
@@ -177,22 +190,37 @@ export function DataTable({
             </div>
           </div>
           <div>
-            <div
-              onClick={() => router.refresh()}
-              className="flex flex-row max-w-min items-center gap-1 p-1 px-2 bg-slate-200 bg-opacity-50 hover:bg-opacity-100 transition-all duration-100 ease-in-out rounded-xl cursor-pointer"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="32"
-                height="32"
-                viewBox="0 0 24 24"
+            <div className="flex flex-row gap-2">
+              {table.getIsAllPageRowsSelected() ||
+              table.getIsSomePageRowsSelected() ? (
+                <div
+                  onClick={() => {
+                    exportCVS(table.getFilteredRowModel().rows);
+                  }}
+                  className="bg-emerald-500 flex flex-row items-center gap-1 p-1 px-2 bg-opacity-50 hover:bg-opacity-100 transition-all duration-100 ease-in-out rounded-xl cursor-pointer"
+                >
+                  <Download />
+                  <span className="font-semibold">Exporter en Excel</span>
+                </div>
+              ) : null}
+
+              <div
+                onClick={() => router.refresh()}
+                className="flex flex-row max-w-min items-center gap-1 p-1 px-2 bg-slate-200 bg-opacity-50 hover:bg-opacity-100 transition-all duration-100 ease-in-out rounded-xl cursor-pointer"
               >
-                <path
-                  fill="currentColor"
-                  d="M12.077 19q-2.931 0-4.966-2.033q-2.034-2.034-2.034-4.964t2.034-4.966T12.077 5q1.783 0 3.339.847q1.555.847 2.507 2.365V5.5q0-.213.144-.356T18.424 5t.356.144t.143.356v3.923q0 .343-.232.576t-.576.232h-3.923q-.212 0-.356-.144t-.144-.357t.144-.356t.356-.143h3.2q-.78-1.496-2.197-2.364Q13.78 6 12.077 6q-2.5 0-4.25 1.75T6.077 12t1.75 4.25t4.25 1.75q1.787 0 3.271-.968q1.485-.969 2.202-2.573q.085-.196.274-.275q.19-.08.388-.013q.211.067.28.275t-.015.404q-.833 1.885-2.56 3.017T12.077 19"
-                />
-              </svg>
-              <span className="font-semibold">Actualiser</span>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="32"
+                  height="32"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    fill="currentColor"
+                    d="M12.077 19q-2.931 0-4.966-2.033q-2.034-2.034-2.034-4.964t2.034-4.966T12.077 5q1.783 0 3.339.847q1.555.847 2.507 2.365V5.5q0-.213.144-.356T18.424 5t.356.144t.143.356v3.923q0 .343-.232.576t-.576.232h-3.923q-.212 0-.356-.144t-.144-.357t.144-.356t.356-.143h3.2q-.78-1.496-2.197-2.364Q13.78 6 12.077 6q-2.5 0-4.25 1.75T6.077 12t1.75 4.25t4.25 1.75q1.787 0 3.271-.968q1.485-.969 2.202-2.573q.085-.196.274-.275q.19-.08.388-.013q.211.067.28.275t-.015.404q-.833 1.885-2.56 3.017T12.077 19"
+                  />
+                </svg>
+                <span className="font-semibold">Actualiser</span>
+              </div>
             </div>
           </div>
         </div>
