@@ -8,7 +8,7 @@ export async function setProfs(values: z.infer<typeof formSchema>) {
   "use server";
   try {
     const response = await axios.post(
-      "http://localhost:3000/api/profs",
+      process.env.NEXT_PUBLIC_API_URL + "/api/profs",
       values
     );
     console.log("Add => : response.data : ", response.data);
@@ -21,7 +21,7 @@ export async function modifyProfs(values: any) {
   "use server";
   try {
     // console.log("Modify => : values : ", values);
-    const response = await axios.put("http://localhost:3000/api/profs", values);
+    const response = await axios.put(process.env.NEXT_PUBLIC_API_URL + "/api/profs", values);
     // console.log("Modify => : response.data : ", response.data);
     return response.data;
   } catch (error) {
@@ -33,7 +33,7 @@ export async function removeProfs(id: any) {
   "use server";
   try {
     console.log("Delete => : values : ", id);
-    const response = await axios.delete(`http://localhost:3000/api/profs/`, {
+    const response = await axios.delete(process.env.NEXT_PUBLIC_API_URL + `/api/profs/`, {
       data: { id: id },
     });
     console.log("Modify => : response.data : ", response.data);
@@ -46,7 +46,7 @@ export async function softRemoveProfs(id: any, isDeleted: boolean) {
   "use server";
   try {
     console.log("Soft Delete => : values : ", id);
-    const response = await axios.patch(`http://localhost:3000/api/profs/`, {
+    const response = await axios.patch(process.env.NEXT_PUBLIC_API_URL + `/api/profs/`, {
       id: id,
       isDeleted,
     });

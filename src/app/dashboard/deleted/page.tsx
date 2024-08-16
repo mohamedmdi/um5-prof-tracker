@@ -9,7 +9,9 @@ import { Trash2 } from "lucide-react";
 async function getProfs() {
   "use server";
   try {
-    const response = await axios.get("http://localhost:3000/api/profs/deleted");
+    const response = await axios.get(
+      process.env.NEXT_PUBLIC_API_URL + "/api/profs/deleted"
+    );
     return response.data.profs;
   } catch (error) {
     if (axios.isAxiosError(error)) return error.response?.status || 500;
@@ -24,16 +26,15 @@ export default async function Dashboard() {
     <div className="flex flex-col items-center p-16 flex-1">
       <div className="flex flex-col gap-2 w-full">
         <div className="flex flex-row gap-2 w-full">
-
-        <Trash2 className="text-red-500 w-8 h-8" />
-        <span className="font-bold text-2xl text-left text-red-500 uppercase">
-          Les Profs supprimés
-        </span>
+          <Trash2 className="text-red-500 w-8 h-8" />
+          <span className="font-bold text-2xl text-left text-red-500 uppercase">
+            Les Profs supprimés
+          </span>
         </div>
       </div>
       <div className="w-full">
         <div className="py-4">
-          <DataTable data={data} isDeleted = {true} />
+          <DataTable data={data} isDeleted={true} />
         </div>
       </div>
       <div className="relative z-[-1] flex place-items-center"></div>

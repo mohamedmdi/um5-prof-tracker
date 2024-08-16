@@ -59,7 +59,7 @@ export async function removeSession() {
 
 export const verifySession = async (token: string) => {
   try {
-    const response = await axios.get("http://localhost:3000/api/auth", {
+    const response = await axios.get(process.env.NEXT_PUBLIC_API_URL + "/api/auth", {
       headers: {
         Authorization: `Bearer ${token}`,
       },
