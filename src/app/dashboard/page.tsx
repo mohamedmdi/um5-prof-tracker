@@ -13,7 +13,7 @@ import { auth } from "@/lib/firebase";
 async function getProfs() {
   "use server";
   try {
-    const response = await axios.get(process.env.NEXT_PUBLIC_API_URL + "/api/profs");
+    const response = await axios.get(process.env.NEXT_PUBLIC_BASE_URL + "/api/profs");
     return response.data.profs;
   } catch (error) {
     if (axios.isAxiosError(error)) return error.response?.status || 500;

@@ -13,11 +13,14 @@ const protectedRoutes = [HOME_ROUTE, ACCOUNT_ROUTE, PROFS_ROUTE];
 
 const verifyToken = async (token: string) => {
   try {
-    const response = await axios.get(process.env.NEXT_PUBLIC_API_URL + "/api/auth", {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
+    const response = await axios.get(
+      process.env.NEXT_PUBLIC_BASE_URL + "/api/auth",
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
     return response.status;
   } catch (error) {
     if (axios.isAxiosError(error)) return error.response?.status || 500;
