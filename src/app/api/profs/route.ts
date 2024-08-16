@@ -13,7 +13,9 @@ import {
   where,
 } from "firebase/firestore";
 import { firestore } from "firebase-admin";
+import { customInitApp } from "@/lib/firebase-admin-config";
 
+customInitApp();
 const adminDB = firestore();
 const profRef = adminDB.collection("profslist");
 
