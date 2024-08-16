@@ -1,6 +1,7 @@
 import { db } from "@/lib/firebase";
 import { calculateCategory } from "@/lib/utils";
 import axios from "axios";
+import { firestore } from "firebase-admin";
 import {
   collection,
   doc,
@@ -13,6 +14,9 @@ import {
 } from "firebase/firestore";
 import { NextRequest, NextResponse } from "next/server";
 
+const adminDB = firestore();
+const profRef = adminDB.collection("profslist");
+
 export async function GET(request: NextRequest) {
   const authHeader = request.headers.get("authorization");
   if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
@@ -23,18 +27,13 @@ export async function GET(request: NextRequest) {
 
   let updated = 0;
   try {
-    const profs = await getDocs(collection(db, "profslist"));
-    const promises = profs.docs.map(async (prof) => {
+    const snapshot = await profRef.get();
+    const promises = snapshot.docs.map(async (prof) => {
       const profData = prof.data();
       const calculatedCat = calculateCategory(profData.daterec);
-      console.log("Old Cat", profData.cat);
-      console.log("calculatedCat", calculatedCat);
       if (profData.cat != calculatedCat) {
         try {
-          await updateDoc(doc(db, "profslist", prof.id), {
-            ...profData,
-            cat: calculatedCat,
-          });
+          await profRef.doc(prof.id).update({ cat: calculatedCat });
           updated++;
         } catch (error) {
           if (axios.isAxiosError(error)) return error.response?.status || 500;
@@ -42,15 +41,21 @@ export async function GET(request: NextRequest) {
       }
     });
     await Promise.all(promises);
-    return NextResponse.json({
-      status: "success",
-      updated,
-    });
+    return NextResponse.json(
+      {
+        status: "success",
+        updated,
+      },
+      { status: 200 }
+    );
   } catch (error: any) {
     console.error(`Failed to fetch or update profs: ${error.message}`);
-    return NextResponse.json({
-      status: "error",
-      message: error.message,
-    });
+    return NextResponse.json(
+      {
+        status: "error",
+        message: error.message,
+      },
+      { status: 500 }
+    );
   }
 }

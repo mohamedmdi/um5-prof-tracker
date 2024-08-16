@@ -2,7 +2,6 @@ import { NextRequest, NextResponse } from "next/server";
 import { firestore } from "firebase-admin";
 import { customInitApp } from "@/lib/firebase-admin-config";
 
-customInitApp();
 const adminDB = firestore();
 export async function GET(request: NextRequest) {
   const profRef = adminDB.collection("profslist");

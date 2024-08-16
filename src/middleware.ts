@@ -31,6 +31,16 @@ export default async function middleware(request: NextRequest) {
   const session = request.cookies.get(SESSION_COOKIE_NAME)?.value || "";
   const isVerified = session ? await verifyToken(session) : null;
 
+  if (request.nextUrl.pathname.includes("/api/profs")) {
+    const authHeader = request.headers.get("authorization");
+    if (!authHeader) {
+      return new Response("Unauthorized", {
+        status: 401,
+      });
+    }
+    return NextResponse.next();
+  }
+
   if (request.nextUrl.pathname === "/") {
     if (session && isVerified == 200)
       return NextResponse.redirect(new URL(HOME_ROUTE, request.url));
@@ -54,5 +64,5 @@ export default async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: "/((?!api|static|.*\\..*|_next).*)",
+  matcher: "/((?!static|.*\\..*|_next).*)",
 };

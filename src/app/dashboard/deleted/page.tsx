@@ -10,7 +10,12 @@ async function getProfs() {
   "use server";
   try {
     const response = await axios.get(
-      process.env.NEXT_PUBLIC_BASE_URL + "/api/profs/deleted"
+      process.env.NEXT_PUBLIC_BASE_URL + "/api/profs/deleted",
+      {
+        headers: {
+          Authorization: true,
+        },
+      }
     );
     return response.data.profs;
   } catch (error) {

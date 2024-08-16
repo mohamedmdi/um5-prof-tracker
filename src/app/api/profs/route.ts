@@ -15,11 +15,11 @@ import {
 import { firestore } from "firebase-admin";
 import { customInitApp } from "@/lib/firebase-admin-config";
 
-customInitApp();
 const adminDB = firestore();
 const profRef = adminDB.collection("profslist");
 
 export async function GET(request: NextRequest) {
+
   const snapshot = await profRef
     .where("isDeleted", "==", false)
     .orderBy("createdAt", "asc")
@@ -120,8 +120,9 @@ export async function PUT(request: NextRequest) {
 
 export async function PATCH(request: NextRequest) {
   const { id, isDeleted } = await request.json();
+  console.log("\n\n\n**********isDeleted: " + isDeleted);
   try {
-    await profRef.doc(id).update({ isDeleted })
+    await profRef.doc(id).update({ isDeleted });
 
     return NextResponse.json({
       message: "Document Soft Deleted",
@@ -140,7 +141,7 @@ export async function DELETE(request: NextRequest) {
   const { id } = await request.json();
   console.log("api/profs => id: ", id);
   try {
-    await profRef.doc().delete()
+    await profRef.doc().delete();
     return NextResponse.json({
       message: "Document Deleted",
       status: 200,
