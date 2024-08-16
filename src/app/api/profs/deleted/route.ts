@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { firestore } from "firebase-admin";
 import { customInitApp } from "@/lib/firebase-admin-config";
-export const runtime = "edge";
 
 customInitApp();
 const adminDB = firestore();

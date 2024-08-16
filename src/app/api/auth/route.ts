@@ -5,7 +5,6 @@ import { NextRequest, NextResponse } from "next/server";
 import { SESSION_COOKIE_NAME } from "@/lib/constants";
 // import { getAuth } from "firebase-admin/auth";
 
-export const runtime = 'edge';
 customInitApp();
 
 export async function GET(request: NextRequest) {
