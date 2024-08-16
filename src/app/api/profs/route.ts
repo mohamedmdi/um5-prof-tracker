@@ -120,7 +120,6 @@ export async function PUT(request: NextRequest) {
 
 export async function PATCH(request: NextRequest) {
   const { id, isDeleted } = await request.json();
-  console.log("\n\n\n**********isDeleted: " + isDeleted);
   try {
     await profRef.doc(id).update({ isDeleted });
 

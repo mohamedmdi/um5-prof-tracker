@@ -67,12 +67,11 @@ export async function softRemoveProfs(id: any, isDeleted: boolean) {
   try {
     const response = await axios.patch(
       process.env.NEXT_PUBLIC_BASE_URL + `/api/profs/`,
+      { id: id, isDeleted },
       {
         headers: {
           Authorization: true,
         },
-        id: id,
-        isDeleted,
       }
     );
     console.log("Soft Delete => : response.data : ", response.data);
