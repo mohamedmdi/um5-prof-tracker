@@ -14,6 +14,7 @@ import {
 } from "firebase/firestore";
 import { firestore } from "firebase-admin";
 import { customInitApp } from "@/lib/firebase-admin-config";
+export const runtime = "edge";
 
 customInitApp();
 const adminDB = firestore();

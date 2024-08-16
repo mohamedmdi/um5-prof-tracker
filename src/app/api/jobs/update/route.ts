@@ -13,6 +13,8 @@ import {
 } from "firebase/firestore";
 import { NextRequest, NextResponse } from "next/server";
 
+export const runtime = "edge";
+
 export async function GET(request: NextRequest) {
   let updated = 0;
   try {
@@ -41,6 +43,9 @@ export async function GET(request: NextRequest) {
     });
   } catch (error: any) {
     console.error(`Failed to fetch or update profs: ${error.message}`);
-    return NextResponse.error();
+    return NextResponse.json({
+      status: "error",
+      message: error.message,
+    });
   }
 }
