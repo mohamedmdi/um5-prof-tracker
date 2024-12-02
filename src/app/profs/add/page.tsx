@@ -22,6 +22,7 @@ import { Badge } from "@/components/ui/badge";
 import { setProfs } from "@/actions/profs-actions";
 import { formSchema } from "@/lib/utils";
 import { useRouter } from "next/navigation";
+import BulkAdd from "./bulk";
 
 export default function AddProf() {
   const [submitting, setSubmitting] = useState(false);
@@ -42,12 +43,16 @@ export default function AddProf() {
   const calculateCategory = (date: string) => {
     const diffDate = differenceInDays(new Date(), new Date(date));
 
-    if (diffDate < 1825) setCategory("A");
-    else if (diffDate >= 1826 && diffDate < 3650) setCategory("B");
-    else if (diffDate >= 3651 && diffDate < 5475) setCategory("C");
-    else setCategory("D");
+    if (diffDate <= 1825) {
+      setCategory("A");
+    } else if (diffDate <= 3650) {
+      setCategory("B");
+    } else if (diffDate <= 5475) {
+      setCategory("C");
+    } else {
+      setCategory("D");
+    }
   };
-
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setSubmitting(true);
     const newValues = {
@@ -55,7 +60,7 @@ export default function AddProf() {
       daterec: format(values.daterec, "dd/MM/yyyy"),
       cat: category,
     };
-    await setProfs(newValues)
+    await setProfs([newValues])
       .then((data) => {
         console.log("Add => : data : ", data);
         setSubmitting(false);
@@ -66,7 +71,6 @@ export default function AddProf() {
         console.log("Add => : error : ", error);
         setSubmitting(false);
       });
-    // console.log(newValues);
   }
 
   return (
@@ -135,9 +139,7 @@ export default function AddProf() {
                             inputDate >= minDate &&
                             inputDate <= maxDate
                           ) {
-                            calculateCategory(
-                              format(e.target.value, "dd/MM/yyyy")
-                            );
+                            calculateCategory(e.target.value);
                             field.onChange(e.target.value);
                           } else {
                             field.onChange("");
@@ -210,6 +212,7 @@ export default function AddProf() {
           </form>
         </Form>
       </div>
+      <BulkAdd />
     </main>
   );
 }

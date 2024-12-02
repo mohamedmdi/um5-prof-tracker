@@ -9,6 +9,7 @@ import { SESSION_COOKIE_NAME, UID_COOKIE_NAME } from "@/lib/constants";
 import { getAuth } from "firebase/auth";
 import { initializeApp } from "firebase-admin/app";
 import { auth } from "@/lib/firebase";
+import { Separator } from "@radix-ui/react-separator";
 
 async function getProfs() {
   "use server";

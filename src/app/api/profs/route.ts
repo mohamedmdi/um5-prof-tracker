@@ -11,6 +11,7 @@ import {
   setDoc,
   updateDoc,
   where,
+  writeBatch,
 } from "firebase/firestore";
 import { firestore } from "firebase-admin";
 import { customInitApp } from "@/lib/firebase-admin-config";
@@ -19,7 +20,6 @@ const adminDB = firestore();
 const profRef = adminDB.collection("profslist");
 
 export async function GET(request: NextRequest) {
-
   const snapshot = await profRef
     .where("isDeleted", "==", false)
     .orderBy("createdAt", "asc")
@@ -32,14 +32,18 @@ export async function GET(request: NextRequest) {
 }
 
 export async function POST(request: NextRequest) {
-  const newProf = await request.json();
+  const newProfs = await request.json();
   try {
-    const docRef = await profRef.doc().set({
-      ...newProf,
-      createdAt: new Date(),
-      isDeleted: false,
+    newProfs.map(async (newProf: any) => {
+      const docRef = await profRef.doc().set({
+        ...newProf,
+        createdAt: new Date(),
+        isDeleted: false,
+      });
+      console.log("Document written with ID: ", docRef);
+      return;
     });
-    console.log("Document written with ID: ", docRef);
+
     return NextResponse.json({
       message: "Document written",
       status: 200,

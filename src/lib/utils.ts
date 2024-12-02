@@ -25,6 +25,31 @@ export const formSchema = z.object({
   num: z.string().optional(),
 });
 
+export type FormData = z.infer<typeof formSchema>;
+
+export const fileSchema = z.object({
+  file: z
+    .any() // Start with accepting any value
+    .refine(
+      (file): file is File => file instanceof File, // Ensure the input is a File instance
+      "Un fichier valide est requis."
+    )
+    .refine(
+      (file) => file?.size <= 4 * 1024 * 1024, // Max size: 4MB
+      "La taille du fichier doit être de 4 Mo ou moins."
+    )
+    .refine(
+      (file) =>
+        [
+          "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", // .xlsx
+          "application/vnd.ms-excel", // .xls
+        ].includes(file?.type),
+      "Seuls les fichiers Excel (.xls ou .xlsx) sont autorisés."
+    ),
+});
+
+export type FormValues = z.infer<typeof fileSchema>;
+
 export const calculateCategory = (date: string) => {
   const diffDate = differenceInDays(new Date(), new Date(date));
 

@@ -32,7 +32,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
-import { ChevronDown, Download } from "lucide-react";
+import { ChevronDown, Download, Trash2 } from "lucide-react";
 import { getColums, Prof } from "./columns";
 import { useRouter } from "next/navigation";
 import { InputButton } from "@/components/ui/inputButton";
@@ -99,7 +99,7 @@ export function DataTable({
   });
   const exportCVS = (rows: any) => {
     const fieldsToRemove = ["createdAt", "isDeleted", "id"];
-    const rowData = rows.map((row : any) => {
+    const rowData = rows.map((row: any) => {
       fieldsToRemove.forEach((field) => {
         delete row.original[field];
       });
@@ -204,6 +204,18 @@ export function DataTable({
                 </div>
               ) : null}
 
+              {table.getIsAllPageRowsSelected() ||
+              table.getIsSomePageRowsSelected() ? (
+                <div
+                  onClick={() => {
+                    exportCVS(table.getFilteredRowModel().rows);
+                  }}
+                  className="bg-orange-800 flex flex-row items-center gap-1 p-1 px-2 bg-opacity-50 hover:bg-opacity-100 transition-all duration-100 ease-in-out rounded-xl cursor-pointer"
+                >
+                  <Trash2 />
+                  <span className="font-semibold">Exporter en Excel</span>
+                </div>
+              ) : null}
               <div
                 onClick={() => router.refresh()}
                 className="flex flex-row max-w-min items-center gap-1 p-1 px-2 bg-slate-200 bg-opacity-50 hover:bg-opacity-100 transition-all duration-100 ease-in-out rounded-xl cursor-pointer"

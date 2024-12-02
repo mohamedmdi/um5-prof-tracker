@@ -5,7 +5,7 @@ import axios from "axios";
 import { headers } from "next/headers";
 import { z } from "zod";
 
-export async function setProfs(values: z.infer<typeof formSchema>) {
+export async function setProfs(values : any) {
   "use server";
   try {
     const response = await axios.post(
